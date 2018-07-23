@@ -1,0 +1,30 @@
+{
+    "name": "nathan/mobilelookup",
+    "description": "library for get location info via china mobile number",
+    "type": "library",
+    "license": "apache",
+    "authors": [
+        {
+            "name": "Nathan Wu",
+            "email": "nathan@joomlacreator.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/cache": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "MobileLookup\\": "src/MobileLookup"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    }
+}
