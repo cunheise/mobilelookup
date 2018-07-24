@@ -28,7 +28,9 @@ class TaobaoClient extends AbstractClient
     {
         $client = new Client();
         $response = $client->get('https://tcc.taobao.com/cc/json/mobile_tel_segment.htm', [
-            'query' => ['tel' => $number],
+            'query' => [
+                'tel' => $number
+            ],
             'headers' => $this->headers,
         ]);
         if ($response->getStatusCode() != 200) {
