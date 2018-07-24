@@ -12,8 +12,7 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$cache = new FilesystemCache('mobile_lookup', 1 * 60 * 60 * 24, dirname(__DIR__) . '/runtime/cache');
+$cache = new FilesystemCache('namespace', 1 * 60 * 60 * 24, dirname(__DIR__) . '/runtime/cache');
 $client = new BaifubaoClient($cache);
 $mobileLookupService = new MobileLookupService($client);
 echo $client->getLocation(13605177123) . PHP_EOL;
-echo $client->getLocation('13605177122') . PHP_EOL;

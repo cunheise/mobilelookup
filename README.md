@@ -11,11 +11,16 @@ Get location information via china mobile phone number
 
 Sample
 ------
+    use MobileLookup\Client\BaifubaoClient;
+    use MobileLookup\MobileLookupService;
+    use Symfony\Component\Cache\Simple\FilesystemCache;
+    
     require dirname(__DIR__) . '/vendor/autoload.php';
     
-    $number = '13605178123';
-    $mobileLookupService = new MobileLookupService(new TaobaoClient(new FilesystemCache('namespace', 1 * 60 * 60, dirname(__DIR__) . '/runtime')));
-    echo $mobileLookupService->getLocation($number) . PHP_EOL;
+    $cache = new FilesystemCache('namespace', 1 * 60 * 60 * 24, dirname(__DIR__) . '/runtime/cache');
+    $client = new BaifubaoClient($cache);
+    $mobileLookupService = new MobileLookupService($client);
+    echo $client->getLocation(13605177123) . PHP_EOL;
     
 License
 -------
