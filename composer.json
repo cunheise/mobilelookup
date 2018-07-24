@@ -2,7 +2,7 @@
     "name": "mobilelookup/mobilelookup",
     "description": "library for get location info via china mobile number",
     "type": "library",
-    "license": "apache",
+    "license": "Mit",
     "authors": [
         {
             "name": "Nathan Wu",
