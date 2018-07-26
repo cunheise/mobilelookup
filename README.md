@@ -3,7 +3,7 @@ MobileLookup
 
 Install
 -------
-    composer require nathan/mobilelookup
+    composer require mobilelookup/mobilelookup
 
 Lib
 ---
