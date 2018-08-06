@@ -5,9 +5,9 @@ Install
 -------
     composer require mobilelookup/mobilelookup
 
-Lib
+Library
 ---
-Get location information via china mobile phone number
+Library for get location and carrier information via china mobile number
 
 Sample
 ------
@@ -18,9 +18,9 @@ Sample
     require dirname(__DIR__) . '/vendor/autoload.php';
     
     $cache = new FilesystemCache('namespace', 1 * 60 * 60 * 24, dirname(__DIR__) . '/runtime/cache');
-    $client = new BaifubaoClient($cache);
-    $mobileLookupService = new MobileLookupService($client);
-    echo $client->getLocation(13605177123) . PHP_EOL;
+    $mobileLookupService = new MobileLookupService(new BaifubaoClient($cache));
+    echo $mobileLookupService->getLocation('13605177123') . PHP_EOL;
+    echo $mobileLookupService->getCarrier('13605177123') . PHP_EOL;
     
 License
 -------

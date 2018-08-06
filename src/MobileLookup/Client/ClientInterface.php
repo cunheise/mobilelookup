@@ -8,6 +8,8 @@
 
 namespace MobileLookup\Client;
 
+use MobileLookup\Response;
+
 /**
  * Interface ClientInterface
  * @package MobileLookup\Client
@@ -16,7 +18,8 @@ interface ClientInterface
 {
     /**
      * @param string $number
-     * @return string
+     * @return Response
      */
-    public function getLocation($number);
+    public function request($number);
+
 }

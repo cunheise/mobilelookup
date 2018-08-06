@@ -9,6 +9,7 @@
 namespace MobileLookup\Client;
 
 
+use MobileLookup\Response;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\NullCache;
 
@@ -38,7 +39,7 @@ abstract class AbstractClient implements ClientInterface
         if ($cache == null) {
             $cache = new NullCache();
         }
-        $this->cache = $cache;
+        $this->setCache($cache);
     }
 
     /**
@@ -53,24 +54,31 @@ abstract class AbstractClient implements ClientInterface
 
     /**
      * @param string $number
-     * @return string
+     * @return mixed|Response
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getLocation($number)
+    public function request($number)
     {
         $key = md5($number);
         if ($this->cache->has($key)) {
-            $location = $this->cache->get($key);
+            $response = $this->cache->get($key);
         } else {
-            $location = $this->doGetLocation($number);
-            $this->cache->set($key, $location);
+            $response = $this->doRequest($number);
+            $this->cache->set($key, $response);
         }
-        return $location;
+        return new Response($this->parse($response));
     }
 
     /**
      * @param string $number
      * @return string
      */
-    abstract protected function doGetLocation($number);
+    abstract protected function doRequest($number);
+
+    /**
+     * @param string $response
+     * @return array
+     */
+    abstract protected function parse($response);
+
 }

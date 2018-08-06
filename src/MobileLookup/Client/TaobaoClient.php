@@ -11,7 +11,6 @@ namespace MobileLookup\Client;
 
 use GuzzleHttp\Client;
 use MobileLookup\Exception\ParseException;
-use MobileLookup\Util;
 
 /**
  * Class TaobaoClient
@@ -22,9 +21,8 @@ class TaobaoClient extends AbstractClient
     /**
      * @param string $number
      * @return string
-     * @throws ParseException
      */
-    protected function doGetLocation($number)
+    protected function doRequest($number)
     {
         $client = new Client();
         $response = $client->get('https://tcc.taobao.com/cc/json/mobile_tel_segment.htm', [
@@ -34,13 +32,31 @@ class TaobaoClient extends AbstractClient
             'headers' => $this->headers,
         ]);
         if ($response->getStatusCode() != 200) {
-            throw new RemoteGatewayException('remote gateway error');
+            throw new RemoteGatewayException("remote gateway error");
         }
-        $content = $response->getBody()->getContents();
-        if (!preg_match("/province:'([^']+)'/", $content, $m)) {
-            throw new ParseException("'$content' can not be parsed");
+        return $response->getBody()->getContents();
+
+    }
+
+    /**
+     * @param string $response
+     * @return array
+     * @throws ParseException
+     */
+    protected function parse($response)
+    {
+        $converter = function ($s) {
+            return iconv('GB18030', "UTF-8//IGNORE", $s);
+        };
+        if (!preg_match("/province:'([^']+)'/", $response, $m)) {
+            throw new ParseException("can not get province from '$response'");
         }
-        return Util::convertToUtf8($m[1]);
+        $location = $converter($m[1]);
+        if (!preg_match("/catName:'([^']+)'/", $response, $m)) {
+            throw new ParseException("can not get province from '$response'");
+        }
+        $carrier = str_replace('中国', '', $converter($m[1]));
+        return ['location' => $location, 'carrier' => $carrier];
     }
 
 }

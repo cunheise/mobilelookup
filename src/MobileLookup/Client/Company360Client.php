@@ -21,7 +21,7 @@ class Company360Client extends AbstractClient
      * @param string $number
      * @return string
      */
-    protected function doGetLocation($number)
+    protected function doRequest($number)
     {
         $client = new Client();
         $response = $client->get('https://cx.shouji.360.cn/phonearea.php', [
@@ -31,10 +31,19 @@ class Company360Client extends AbstractClient
             'headers' => $this->headers,
         ]);
         if ($response->getStatusCode() != 200) {
-            throw new RemoteGatewayException('remote gateway error');
+            throw new RemoteGatewayException("remote gateway error");
         }
-        $data = json_decode($response->getBody()->getContents(), true);
-        return $data['data']['province'];
+        return $response->getBody()->getContents();
+    }
+
+    /**
+     * @param string $response
+     * @return array
+     */
+    protected function parse($response)
+    {
+        $data = json_decode($response, true);
+        return ['location' => $data['data']['province'], 'carrier' => $data['data']['sp']];
     }
 
 }

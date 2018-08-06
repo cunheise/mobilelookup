@@ -24,6 +24,11 @@ class MobileLookupService
     protected $client;
 
     /**
+     * @var Response $response
+     */
+    protected $response;
+
+    /**
      * MobileLookupService constructor.
      * @param ClientInterface $client
      */
@@ -48,10 +53,41 @@ class MobileLookupService
      */
     public function getLocation($number)
     {
-        if (!is_numeric($number) || strlen($number) != 11) {
+        return $this->getResponse($number)->getLocation();
+    }
+
+    /**
+     * @param string $number
+     * @return string
+     */
+    public function getCarrier($number)
+    {
+        return $this->getResponse($number)->getCarrier();
+    }
+
+    /**
+     * @param string $number
+     * @return Response
+     * @throws InvalidNumberException
+     */
+    protected function getResponse($number)
+    {
+        $this->validate($number);
+        if ($this->response == null) {
+            $this->response = $this->client->request($number);
+        }
+        return $this->response;
+    }
+
+    /**
+     * @param string $number
+     * @throws InvalidNumberException
+     */
+    protected function validate($number)
+    {
+        if (!is_string($number) || !is_numeric($number) || strlen($number) != 11 || $number[0] != 1) {
             throw new InvalidNumberException("'$number' is invalid");
         }
-        return $this->client->getLocation($number);
     }
 
 }

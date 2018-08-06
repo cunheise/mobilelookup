@@ -23,7 +23,7 @@ class BaifubaoClient extends AbstractClient
      * @return string
      * @throws RemoteGatewayException
      */
-    protected function doGetLocation($number)
+    protected function doRequest($number)
     {
         $client = new Client();
         $response = $client->get('https://www.baifubao.com/callback', [
@@ -35,14 +35,23 @@ class BaifubaoClient extends AbstractClient
             'headers' => $this->headers
         ]);
         if ($response->getStatusCode() != 200) {
-            throw new RemoteGatewayException('remote gateway error');
+            throw new RemoteGatewayException("remote gateway error");
         }
+        return $response->getBody()->getContents();
+    }
+
+    /**
+     * @param string $response
+     * @return array
+     */
+    protected function parse($response)
+    {
         $data = json_decode(trim(preg_replace('/^phone/', '',
-            preg_replace('/\/\*\w+\*\//', '', $response->getBody()->getContents())), '()'), 1);
+            preg_replace('/\/\*\w+\*\//', '', $response)), '()'), true);
         if ($data['meta']['result'] != 0) {
-            throw new RemoteGatewayException('remote gateway error');
+            throw new RemoteGatewayException("'$response' get not get information from remote gateway");
         }
-        return $data['data']['area'];
+        return ['location' => $data['data']['area'], 'carrier' => $data['data']['operator']];
     }
 
 }
