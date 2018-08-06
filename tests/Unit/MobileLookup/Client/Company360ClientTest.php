@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: nathan
- * Date: 2018/7/23
- * Time: 17:12
+ * Date: 2018/8/6
+ * Time: 12:04
  */
 
-namespace Tests\Unit\MobileLookup\Client;
+namespace tests\Unit\MobileLookup\Client;
 
-use MobileLookup\Client\TaobaoClient;
+use MobileLookup\Client\Company360Client;
 
-class TaobaoClientTest extends \PHPUnit_Framework_TestCase
+class Company360ClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetLocation()
     {
-        $client = new TaobaoClient();
+        $client = new Company360Client();
         $this->assertEquals('江苏', $client->getLocation('13605177123'));
         $this->assertEquals('四川', $client->getLocation('19915410557'));
     }
