@@ -61,12 +61,12 @@ abstract class AbstractClient implements ClientInterface
     {
         $key = md5(get_class($this) . $number);
         if ($this->cache->has($key)) {
-            $response = $this->cache->get($key);
+            $response = unserialize($this->cache->get($key));
         } else {
-            $response = $this->doRequest($number);
-            $this->cache->set($key, $response);
+            $response = new Response($this->parse($this->doRequest($number)));
+            $this->cache->set($key, serialize($response));
         }
-        return new Response($this->parse($response));
+        return $response;
     }
 
     /**
