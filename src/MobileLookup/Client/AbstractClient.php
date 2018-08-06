@@ -59,7 +59,7 @@ abstract class AbstractClient implements ClientInterface
      */
     public function request($number)
     {
-        $key = md5($number);
+        $key = md5(get_class($this) . $number);
         if ($this->cache->has($key)) {
             $response = $this->cache->get($key);
         } else {
@@ -72,12 +72,14 @@ abstract class AbstractClient implements ClientInterface
     /**
      * @param string $number
      * @return string
+     * @throws RemoteGatewayException
      */
     abstract protected function doRequest($number);
 
     /**
-     * @param string $response
+     * @param $response
      * @return array
+     * @throws ParseException
      */
     abstract protected function parse($response);
 

@@ -10,6 +10,7 @@ namespace MobileLookup\Client;
 
 
 use GuzzleHttp\Client;
+use MobileLookup\Exception\ParseException;
 use MobileLookup\Exception\RemoteGatewayException;
 
 /**
@@ -43,13 +44,14 @@ class BaifubaoClient extends AbstractClient
     /**
      * @param string $response
      * @return array
+     * @throws ParseException
      */
     protected function parse($response)
     {
         $data = json_decode(trim(preg_replace('/^phone/', '',
             preg_replace('/\/\*\w+\*\//', '', $response)), '()'), true);
         if ($data['meta']['result'] != 0) {
-            throw new RemoteGatewayException("'$response' get not get information from remote gateway");
+            throw new ParseException("'$response' get not get information from remote gateway");
         }
         return ['location' => $data['data']['area'], 'carrier' => $data['data']['operator']];
     }

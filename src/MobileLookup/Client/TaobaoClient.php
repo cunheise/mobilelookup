@@ -21,6 +21,7 @@ class TaobaoClient extends AbstractClient
     /**
      * @param string $number
      * @return string
+     * @throws RemoteGatewayException
      */
     protected function doRequest($number)
     {
@@ -48,14 +49,14 @@ class TaobaoClient extends AbstractClient
         $converter = function ($s) {
             return iconv('GB18030', "UTF-8//IGNORE", $s);
         };
-        if (!preg_match("/province:'([^']+)'/", $response, $m)) {
+        if (!preg_match("/province:'(?P<location>[^']+)'/", $response, $m)) {
             throw new ParseException("can not get province from '$response'");
         }
-        $location = $converter($m[1]);
-        if (!preg_match("/catName:'([^']+)'/", $response, $m)) {
+        $location = $converter($m['location']);
+        if (!preg_match("/catName:'(?P<carrier>[^']+)'/", $response, $m)) {
             throw new ParseException("can not get province from '$response'");
         }
-        $carrier = str_replace('中国', '', $converter($m[1]));
+        $carrier = str_replace('中国', '', $converter($m['carrier']));
         return ['location' => $location, 'carrier' => $carrier];
     }
 

@@ -20,6 +20,7 @@ class Company360Client extends AbstractClient
     /**
      * @param string $number
      * @return string
+     * @throws RemoteGatewayException
      */
     protected function doRequest($number)
     {
